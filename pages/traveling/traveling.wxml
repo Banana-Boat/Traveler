@@ -1,0 +1,8 @@
+<!--pages/traveling/traveling.wxml-->
+<view class="content">
+    <view><text>远离屏幕，专注旅行</text></view>
+    <view><text>{{departure}}->{{destination}}</text></view>
+    <view><text>剩余时间：{{leftTime}}</text></view>
+    <button bindtap="quit">提前结束</button>
+</view>
+

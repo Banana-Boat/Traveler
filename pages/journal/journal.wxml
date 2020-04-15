@@ -1,0 +1,25 @@
+<sidebar></sidebar>
+<view class="content">
+    <view>旅行日志</view>
+    <view wx:if="{{RecordList.length == 0}}">
+        当前无旅行记录
+    </view>
+    <view wx:if="{{RecordList.length != 0}}">
+        <view wx:for="{{RecordList}}" wx:key="*this">
+            <view wx:if="{{item.partner == 'none'}}">
+                <view>单人旅行-{{item.status}} {{item.departure}}->{{item.destination}} {{item.time}}min</view>
+                <view>{{item.date}}</view>
+            </view>
+            <view wx:if="{{item.partner != 'none'}}">
+                多人旅行-{{item.status}} {{item.departure}}->{{item.destination}} {{item.time}}min
+                <view>
+                    <view style="display: inline-block" wx:for="{{item.partner}}"  wx:key="*this" wx:for-item="name">
+                        {{name}}
+                    </view>
+                    {{item.date}}
+                </view>
+            </view>
+        </view>
+    </view>
+</view>
+

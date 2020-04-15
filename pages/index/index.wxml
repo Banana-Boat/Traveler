@@ -1,0 +1,33 @@
+<!--index.wxml-->
+<!-- <view class="container">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称</button>
+    <block wx:else>
+      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view> 
+</view> -->
+<sidebar></sidebar>
+<view class="content">
+    <view><text>当前位置：{{userLocation.province}}  {{userLocation.city}}</text></view>
+    <map scale="4" latitude="{{selectedMarker[0].latitude}}" 
+        longitude="{{selectedMarker[0].longitude}}"  
+        bindtap="markChange" markers="{{selectedMarker}}" 
+        subkey="S2FBZ-PNXK3-62I3W-3REB6-M4AWJ-6IBAB">
+    </map>
+    <view class="" >
+        旅行时间/min<slider bindchange="timeChange" value="{{timeSlider.value}}" step="{{timeSlider.unit}}" min="{{timeSlider.unit}}" max="{{timeSlider.max}}" show-value/>
+    </view>
+    <view class="">
+        <picker bindchange="placeChange"  value="{{placePicker.index}}" range="{{placePicker.array}}" range-key="name">
+            <view class="">选择旅行目的地</view>
+            <view class="picker">
+            当前选择：{{placePicker.array[placePicker.index].name}}
+            </view>
+        </picker>
+    </view>
+    <button bindtap="startTraveling" >开始旅行</button>
+    <button open-type="share">邀请好友</button>
+</view>
+

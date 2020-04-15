@@ -1,0 +1,17 @@
+<!--pages/setting/setting.wxml-->
+<sidebar></sidebar>
+<view class="content">
+    <view>旅行完成时提示<switch id="showTip" checked="{{showTipChecked}}"></switch></view>
+    <view>接受好友的旅行邀请<switch id="acceptInvitation" checked="{{acceptInvitationChecked}}"></switch></view>
+    <view>开启定位功能<switch id="location" checked="{{locationChecked}}"></switch></view>
+
+    <view class="" >
+        <view class="">选择最小时间分度</view>
+        <picker bindchange="timeUnitChange"  value="{{timeUnitIndex}}" range="{{timeUnitArray}}">
+            <view class="picker">
+            当前选择：{{timeUnitArray[timeUnitIndex]}}
+            </view>
+        </picker>
+    </view>
+</view>
+

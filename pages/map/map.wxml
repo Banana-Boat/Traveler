@@ -1,0 +1,4 @@
+<!--pages/map/map.wxml-->
+<sidebar></sidebar>
+<view class="content">
+</view>
