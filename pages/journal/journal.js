@@ -5,16 +5,7 @@ var app = getApp();
 
 Page({
     data: {
-        RecordList:[
-            {
-                date: '2020/04/14',
-                departure: '浙江',
-                destination: '河北',
-                partner: ['Amy', 'Jack'],
-                status: '成功',
-                time: '30'
-            }
-        ]
+        RecordList: null
     },
     onLoad: function (options) {
         var page =  this;

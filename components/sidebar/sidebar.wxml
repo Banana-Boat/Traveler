@@ -1,10 +1,13 @@
 <!-- 侧边栏内容 -->
-<image bindtap="tap_ch" src="../../img/sidebar.png" class="{{open ? 'nodisplay' : ''}}"></image>
+<image bindtap="tap_ch" src="../../img/sidebar.svg" class="{{open ? 'nodisplay' : ''}}"></image>
 <view class="{{open ? 'sidebar' : ''}}">
     <view class="slidebar-box {{open ? '' : 'nodisplay'}}">
         <view class="sidebar-content">
             <view class="wc">
                 <navigator bindtouchend="tap_end" url="../../pages/index/index">准备旅行</navigator>
+            </view>
+            <view class="wc">
+                <navigator bindtouchend="tap_end" url="../../pages/walking/walking">徒步计划</navigator>
             </view>
             <view class="wc">
                 <navigator bindtouchend="tap_end" url="../../pages/journal/journal">旅行日志</navigator>

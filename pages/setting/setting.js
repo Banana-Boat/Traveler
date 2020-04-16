@@ -8,23 +8,24 @@ Page({
     },
     onLoad: function (options) {
         var page = this;
-        wx.getStorage({
-            key: 'timeUnit',
-            success: function(res) {
-                page.setData({
-                    timeUnitIndex: page.data.timeUnitArray.findIndex(item => item == res.data)
-                })
-            }
+        page.setData({                  //小程序启动函数已将本地存储值读入全局变量
+            timeUnitIndex: page.data.timeUnitArray.findIndex(item => item == app.globalData.settings.timeUnit)
         })
     },
     timeUnitChange: function (e) {
         var page = this
-        this.setData({
+        page.setData({          
             timeUnitIndex: e.detail.value
         })
-        wx.setStorage({
-            key: 'timeUnit',
-            data: page.data.timeUnitArray[e.detail.value],
+        wx.getStorage({                 //异步取，避免削减性能
+            key: 'settings',
+            success: function(res) {
+                res.data.timeUnit = page.data.timeUnitArray[e.detail.value];
+                wx.setStorage({         //异步改
+                    key: 'settings',
+                    data: res.data
+                })
+            },
         })
         app.globalData.settings.timeUnit = page.data.timeUnitArray[e.detail.value]
     }

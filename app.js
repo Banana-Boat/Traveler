@@ -2,21 +2,27 @@
 App({
     onLaunch: function () {
         var that = this;
-        wx.cloud.init({         //初始化云能力
+        /* 初始化云能力 */
+        wx.cloud.init({         
             env: 'traveler-ejvl3',
             traceUser: true,
         });
-        // 展示本地存储能力
-        var logs = wx.getStorageSync('logs') || []
-        logs.unshift(Date.now())
-        wx.setStorageSync('logs', logs)
-
+        /* 初始化本地存储得设置信息 */
+        if(wx.getStorageSync('settings')){          //非首次登录，读取本地设置并覆盖全局变量     
+            that.globalData.settings = wx.getStorageSync('settings');
+        }else{                                      //首次登录，创建本地存储
+            wx.setStorage({                         //异步存入，避免削减性能
+                key: 'settings',
+                data: {
+                    timeUnit: 10
+                }
+            })
+        }
         // 获取用户信息
         wx.getSetting({
             success: res => {
                 if (res.authSetting['scope.userInfo']) {
                 // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-                    
                 }
                 wx.getUserInfo({
                     success: res => {
@@ -68,12 +74,12 @@ App({
         userOpenid: null,
         userLocation: null,
         /* 旅行 */
-        distanceToProvinces: null,
+        provinceList: null,
         travelStatus: 'none',
         memberCount: 1,
         /* 设置 */
         settings: {
             timeUnit: 10
         }
-    },
+    }
 })

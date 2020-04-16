@@ -1,4 +1,13 @@
 <!--pages/map/map.wxml-->
 <sidebar></sidebar>
 <view class="content">
+    <map scale="3" latitude="38.502621" 
+        longitude="106.206479"  
+        bindmarkertap="markerTap" markers="{{markerList}}" 
+        subkey="S2FBZ-PNXK3-62I3W-3REB6-M4AWJ-6IBAB">
+    </map>
+    <view>已完成旅行 {{stats.totalCount}} 次</view>
+    <view>其中到 {{stats.max.place}} 的次数最多，共 {{stats.max.count}} 次</view>
+    <view>总旅行时长达 {{stats.totalTime}} 分钟</view>
+    <button open-type="share">分享</button>
 </view>

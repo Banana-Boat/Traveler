@@ -1,9 +1,11 @@
 //index.js
 var QQMapWX = require('../../script/qqmap-wx-jssdk1.2/qqmap-wx-jssdk.js');  //获取应用实例
-var qqmapsdk;
+var qqmapsdk = new QQMapWX({        //创建腾讯地图对象
+    key: 'S2FBZ-PNXK3-62I3W-3REB6-M4AWJ-6IBAB'
+});
 const app = getApp();
 const db = wx.cloud.database();
-var distanceList = require('../../data/provinces_data.js');   //获取外部数据（省份及其中心经纬度）
+var provinceList = require('../../data/provinces_data.js');   //获取外部数据（省份及其中心经纬度）
 
 Page({
     data: {
@@ -33,15 +35,8 @@ Page({
     },
     onLoad: function () {
         var page = this;
-        /* 获取用户所在城市，并且避免重复定位与计算 */
-        if (app.globalData.userLocation){       
-            page.setData({
-                userProvince: app.globalData.userLocation.province,
-                userCity: app.globalData.userLocation.city
-            })
-        }else{
-            page.getUserLocation();
-        }
+        /* 获取用户所在城市 */
+        page.getUserLocation();
         /* 通过openid添加用户至数据库 */
         if(app.globalData.userOpenid){      
             page.addUserToDB(app.globalData.userOpenid);
@@ -58,15 +53,6 @@ Page({
                 }
             )
         }
-        //初始化时间选择控件的绑定值
-        let unit = app.globalData.settings.timeUnit;
-        page.setData({
-            timeSlider: {
-                value: 0,
-                max: unit * 12,
-                unit: unit
-            }
-        })
         /* 获取用户信息 */
         if (app.globalData.userInfo) {
             this.setData({
@@ -95,7 +81,29 @@ Page({
         }
     },
     onShow: function(){
-        if (app.globalData.travelStatus == 'failed') {   //从旅行页面直接点击返回按钮
+        var page = this;
+        //初始化控件的绑定值
+        let unit = app.globalData.settings.timeUnit;
+        if(page.data.timeSlider.value){    //当更改设置信息从设置页面返回时，重新读取信息
+            page.setData({
+                timeSlider: {              //value为设置前选择地rank*现unit的值
+                    value: page.data.selectedPlace.time / page.data.timeSlider.unit * unit,
+                    max: unit * 12,
+                    unit: unit
+                }
+            })
+        }else{
+            page.setData({
+                timeSlider: {
+                    value: 0,
+                    max: unit * 12,
+                    unit: unit
+                }
+            })
+        }
+        
+        //从旅行页面直接点击返回按钮
+        if (app.globalData.travelStatus == 'failed') {   
             wx.showModal({
                 title: '很遗憾，本次旅行失败...',
                 showCancel: false
@@ -131,9 +139,6 @@ Page({
     },
     getUserLocation: function () {      //获取用户当前所在位置信息、计算到达各省会所需时间、初始化控件内容
         var page = this;
-        qqmapsdk = new QQMapWX({        //创建腾讯地图对象
-            key: 'S2FBZ-PNXK3-62I3W-3REB6-M4AWJ-6IBAB'
-        });
         wx.getLocation({
             success: function (res) {           //获取用户当前经纬度信息
                 let latitude = res.latitude;
@@ -163,10 +168,10 @@ Page({
                             city: res.result.ad_info.city
                         }
                         var destinationList = [];       //制作数组参数
-                        for (let i = 0; i < distanceList.length; i++) {
+                        for (let i = 0; i < provinceList.length; i++) {
                             destinationList.push({
-                                latitude: distanceList[i].latitude,
-                                longitude: distanceList[i].longitude
+                                latitude: provinceList[i].latitude,
+                                longitude: provinceList[i].longitude
                             });
                         }
                         qqmapsdk.calculateDistance({
@@ -175,20 +180,20 @@ Page({
                             success: function (res) {
                                 /* 按距离计算相应rank */
                                 for (let i = 0; i < res.result.elements.length; i++) {
-                                    distanceList[i]['distance'] = res.result.elements[i].distance
+                                    provinceList[i]['distance'] = res.result.elements[i].distance
                                 }
-                                distanceList.sort(function (a, b) { return a.distance - b.distance });   
+                                provinceList.sort(function (a, b) { return a.distance - b.distance });   
                                 let rank = 0;       //按顺序对应等级
-                                for (let i = 0; i < distanceList.length; i++) {
+                                for (let i = 0; i < provinceList.length; i++) {
                                     if (i % 3 == 0) rank++;
-                                    distanceList[i]['rank'] = rank;
+                                    provinceList[i]['rank'] = rank;
                                 }
-                                app.globalData.distanceToProvinces = distanceList;
+                                app.globalData.provinceList = provinceList;
                                 /* 地点选择控件初始化 */
                                 page.setData({
                                     placePicker: {
                                         index: 0,
-                                        array: distanceList.filter(item => item.rank == 1)
+                                        array: provinceList.filter(item => item.rank == 1)
                                     }
                                 })
                             },
@@ -234,7 +239,7 @@ Page({
             },
             success: res => {
                 if(res.result.address_component.nation == '中国'){
-                    var tempProvInfo = app.globalData.distanceToProvinces.filter(
+                    var tempProvInfo = provinceList.filter(
                         item => {
                             return res.result.address_component.province.match(item.name);
                         }
@@ -242,7 +247,7 @@ Page({
                     if (tempProvInfo.length > 0) {      //若地区信息存在于距离列表中，更新已选地点信息
                         let name = tempProvInfo[0].name;
                         let time = tempProvInfo[0].rank * page.data.timeSlider.unit;
-                        let pickerArray = distanceList.filter(item => item.rank == tempProvInfo[0].rank)
+                        let pickerArray = provinceList.filter(item => item.rank == tempProvInfo[0].rank)
                         page.setData({
                             selectedPlace: {
                                 name: name,
@@ -272,7 +277,7 @@ Page({
     },
     timeChange: function(e){            //通过时间滑动选择器缩小目的地可选范围 
         var page = this;                 
-        var placeArray = distanceList.filter(item => item.rank == e.detail.value / page.data.timeSlider.unit);             
+        var placeArray = provinceList.filter(item => item.rank == e.detail.value / page.data.timeSlider.unit);             
         page.setData({
             selectedPlace: {
                 name: placeArray[0].name,
@@ -291,7 +296,7 @@ Page({
     placeChange: function(e){           //通过地点滚动选择器选择目的地
         var page = this;
         var placeArray = page.data.placePicker.array;       //获取地点picker的绑定数组
-        var item = distanceList.filter(item => item.name == placeArray[e.detail.value].name)[0]      //获取绑定数组中picker选中的对象
+        var item = provinceList.filter(item => item.name == placeArray[e.detail.value].name)[0]      //获取绑定数组中picker选中的对象
         page.setData({
             selectedPlace: {
                 name: item.name,
@@ -314,7 +319,7 @@ Page({
         })
         
     },
-    onShareAppMessage: function (res) {
+    onShareAppMessage: function (res) { //生成图片并分享链接
         if (res.from === 'button') {
             // 来自页面内转发按钮
             console.log(res.target)

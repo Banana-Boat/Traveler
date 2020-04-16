@@ -93,7 +93,7 @@ Page({
                 var date = util.formatTime(new Date());
                 table.doc(res.data[0]._id).update({
                     data: {
-                        travelRecord: _.unshift({
+                        travelRecord: _.unshift({       //插入数组开头，保证以时间为降序排列
                             date: date,
                             destination: page.data.destination,
                             departure: page.data.departure,

@@ -1,0 +1,18 @@
+<sidebar></sidebar>
+<view class="content">
+    <map scale="6" bindtap="mapTap"
+        latitude="{{userLocation.latitude}}" 
+        longitude="{{userLocation.longitude}}"
+        markers="{{markerList}}" bindmarkertap="markerTap"
+        subkey="S2FBZ-PNXK3-62I3W-3REB6-M4AWJ-6IBAB">
+    </map>
+    <view class="">
+        <picker bindchange=""  value="{{daysPicker.index}}" range="{{daysPicker.array}}">
+            <view class="">计划完成天数</view>
+            <view class="picker">
+                当前选择：{{daysPicker.array[daysPicker.index]}}
+            </view>
+        </picker>
+    </view>
+    <view>步行距离{{distance}}</view>
+</view>

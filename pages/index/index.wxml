@@ -17,7 +17,7 @@
         subkey="S2FBZ-PNXK3-62I3W-3REB6-M4AWJ-6IBAB">
     </map>
     <view class="" >
-        旅行时间/min<slider bindchange="timeChange" value="{{timeSlider.value}}" step="{{timeSlider.unit}}" min="{{timeSlider.unit}}" max="{{timeSlider.max}}" show-value/>
+        所需时间/min<slider bindchange="timeChange" value="{{timeSlider.value}}" step="{{timeSlider.unit}}" min="{{timeSlider.unit}}" max="{{timeSlider.max}}" show-value/>
     </view>
     <view class="">
         <picker bindchange="placeChange"  value="{{placePicker.index}}" range="{{placePicker.array}}" range-key="name">
