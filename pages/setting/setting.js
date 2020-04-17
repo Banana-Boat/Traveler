@@ -17,7 +17,7 @@ Page({
         page.setData({          
             timeUnitIndex: e.detail.value
         })
-        wx.getStorage({                 //异步取，避免削减性能
+        wx.getStorage({                 //由于仅更改部分设置信息，故需先取出再更改（异步取，避免削减性能）
             key: 'settings',
             success: function(res) {
                 res.data.timeUnit = page.data.timeUnitArray[e.detail.value];

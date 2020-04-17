@@ -7,12 +7,29 @@
         subkey="S2FBZ-PNXK3-62I3W-3REB6-M4AWJ-6IBAB">
     </map>
     <view class="">
-        <picker bindchange=""  value="{{daysPicker.index}}" range="{{daysPicker.array}}">
-            <view class="">计划完成天数</view>
+        <picker bindchange="heightChange"  value="{{heightPicker.index}}" range="{{heightPicker.array}}">
+            <view class="">身高<text>（用于计算您的步幅）</text></view>
             <view class="picker">
-                当前选择：{{daysPicker.array[daysPicker.index]}}
+                当前选择：{{heightPicker.array[heightPicker.index]}}公分
             </view>
         </picker>
     </view>
-    <view>步行距离{{distance}}</view>
+    <view class="">
+        <picker bindchange="daysChange"  value="{{daysPicker.index}}" range="{{daysPicker.array}}">
+            <view class="">计划完成天数</view>
+            <view class="picker">
+                当前选择：{{daysPicker.array[daysPicker.index]}}天
+            </view>
+        </picker>
+    </view>
+    <view>目的地：
+        <text wx:if="{{selectedPlace.name}}">{{selectedPlace.name}}</text>
+    </view>
+    <view>步行距离：
+        <text wx:if="{{selectedPlace.totalDistance}}">{{selectedPlace.totalDistance}}公里</text>
+    </view>
+    <view>日平均步数：
+        <text wx:if="{{selectedPlace.stepsPerDay}}">{{selectedPlace.stepsPerDay}}步</text>
+    </view>
+    <button bindtap="startTraveling">开始旅行</button>
 </view>

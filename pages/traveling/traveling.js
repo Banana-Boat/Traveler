@@ -40,7 +40,8 @@ Page({
             return n < 10 ? '0' + n : n;
         }
     },
-    quit: function(){           //点击提前结束，显示弹窗，若执意退出，在onUnLoad中处理
+    /* 点击提前结束，显示弹窗，若执意退出，在onUnLoad中处理 */
+    quit: function(){
         if(leftSec / totalSec < 0.5)
             wx.showModal({
                 title: '行程过半，确定要结束旅行吗？',
@@ -83,6 +84,7 @@ Page({
             this.addTravelToDB('失败', 'none');         //将记录添加至数据库
         }                             
     },
+    /* 将记录存入数据库 */
     addTravelToDB: function(status, partners) {     
         var page = this;
         var table = db.collection('UserInfo');

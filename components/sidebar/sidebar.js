@@ -18,7 +18,7 @@ Component({
      * 组件的方法列表
      */
     methods: {
-        // 点击左上角小图标事件
+        /* 点击左上角小图标事件 */
         tap_ch: function (e) {
             if (this.data.open) {
                 this.setData({

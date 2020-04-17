@@ -111,14 +111,12 @@ Page({
             app.globalData.travelStatus = 'none';
         }
     },
+    /* 获取用户信息 */
     getUserInfo: function(e) {
         console.log(e)
         app.globalData.userInfo = e.detail.userInfo
-        this.setData({
-            userInfo: e.detail.userInfo,
-            hasUserInfo: true
-        })
     },
+    /* 将用户信息（openid）添加至数据库 */
     addUserToDB: function(openid){
         db.collection('UserInfo').where({
             _openid: openid
@@ -137,7 +135,8 @@ Page({
             }
         })
     },
-    getUserLocation: function () {      //获取用户当前所在位置信息、计算到达各省会所需时间、初始化控件内容
+    /* 获取用户当前所在位置信息、计算到达各省会所需时间、初始化控件内容 */
+    getUserLocation: function () {
         var page = this;
         wx.getLocation({
             success: function (res) {           //获取用户当前经纬度信息
@@ -224,7 +223,8 @@ Page({
             }
         })
     },
-    markChange: function(e){            //通过标注地图选择目的地
+    /* 通过标注地图选择目的地 */
+    markChange: function(e){
         var page = this;
         page.setData({
             selectedMarker: [{          //显示地图标注
@@ -275,7 +275,8 @@ Page({
             }
         })
     },
-    timeChange: function(e){            //通过时间滑动选择器缩小目的地可选范围 
+    /* 通过时间滑动选择器缩小目的地可选范围  */
+    timeChange: function(e){
         var page = this;                 
         var placeArray = provinceList.filter(item => item.rank == e.detail.value / page.data.timeSlider.unit);             
         page.setData({
@@ -293,7 +294,8 @@ Page({
             }
         })
     },
-    placeChange: function(e){           //通过地点滚动选择器选择目的地
+    /* 通过地点滚动选择器选择目的地 */
+    placeChange: function(e){
         var page = this;
         var placeArray = page.data.placePicker.array;       //获取地点picker的绑定数组
         var item = provinceList.filter(item => item.name == placeArray[e.detail.value].name)[0]      //获取绑定数组中picker选中的对象
@@ -310,16 +312,24 @@ Page({
         })
         
     },
+    /* 点击开始旅行 */
     startTraveling: function(){
         var page = this;
-        app.globalData.travelStatus = 'traveling'
-        wx.navigateTo({
-            url: '../traveling/traveling?name=' + page.data.selectedPlace.name + 
-                '&time=' + page.data.selectedPlace.time,
-        })
-        
+        if(page.data.selectedPlace){
+            app.globalData.travelStatus = 'traveling'
+            wx.navigateTo({
+                url: '../traveling/traveling?name=' + page.data.selectedPlace.name +
+                    '&time=' + page.data.selectedPlace.time,
+            })
+        }else{
+            wx.showModal({
+                title: '请先选择旅行目的地',
+                showCancel: false
+            })
+        }
     },
-    onShareAppMessage: function (res) { //生成图片并分享链接
+    /* 生成图片并分享链接 */
+    onShareAppMessage: function (res) {
         if (res.from === 'button') {
             // 来自页面内转发按钮
             console.log(res.target)

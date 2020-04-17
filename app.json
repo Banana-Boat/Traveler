@@ -16,6 +16,7 @@
     "style": "v2",
     "sitemapLocation": "sitemap.json",
     "permission": {
+        "scope.userInfo": {},
         "scope.userLocation": {
             "desc": "你的位置将被用于距离计算"
         }

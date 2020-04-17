@@ -1,15 +1,16 @@
 <!--index.wxml-->
-<!-- <view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称</button>
-    <block wx:else>
-      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
-  </view> 
-</view> -->
+  
 <sidebar></sidebar>
 <view class="content">
+    <!-- 用户信息 -->
+    <view class="userinfo">
+        <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称</button>
+        <!-- <block wx:else>
+        <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+        </block> -->
+    </view> 
+    <!-- 主体 -->
     <view><text>当前位置：{{userLocation.province}}  {{userLocation.city}}</text></view>
     <map scale="4" latitude="{{selectedMarker[0].latitude}}" 
         longitude="{{selectedMarker[0].longitude}}"  
@@ -27,7 +28,7 @@
             </view>
         </picker>
     </view>
-    <button bindtap="startTraveling" >开始旅行</button>
+    <button bindtap="startTraveling">开始旅行</button>
     <button open-type="share">邀请好友</button>
 </view>
 
